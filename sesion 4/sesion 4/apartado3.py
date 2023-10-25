@@ -24,7 +24,7 @@ def EventoRaton(evento, x, y, flags,datos):
         #######################################################################        
         #Sustituya pass por activar la representación del pincel mediante una
         #asignación de la variable start.
-        pass
+        start = True
         #######################################################################
     #Al soltar el botón izquierdo se desactiva la representación del pincel    
     elif evento == cv2.EVENT_LBUTTONUP:
@@ -32,14 +32,14 @@ def EventoRaton(evento, x, y, flags,datos):
         #######################################################################        
         #Sustituya pass por desactivar la representación del pincel mediante una
         #asignación de la variable start.
-        pass
+        start = False
         #######################################################################
    #Al mover el ratón en modo activado de representación se dibuja un círculo
     elif start==True and evento==cv2.EVENT_MOUSEMOVE:
          #TODO:
         #######################################################################        
         #Sustituya pass por el comando de dibujar cv2.circle.
-        pass
+        cv2.circle(img, (x,y), grosor, color, -1)
         #######################################################################
         
 
@@ -60,13 +60,15 @@ cv2.setMouseCallback("Paint", EventoRaton)
 #considerando blanco como color inicial de representación (R=255,G=255,B=255)
 ###############################################################################
 cv2.createTrackbar('R','Paint',255,255,nada)
+cv2.createTrackbar('G','Paint',255,255,nada)
+cv2.createTrackbar('B','Paint',255,255,nada)
 
 #TODO:
 ###############################################################################       
 #Crear barra de desplazamiento para definir el grosor del pincel con valor 
 #inicial=2. Rango [0-15]
 ###############################################################################
-
+cv2.createTrackbar('Grosor','Paint',2,15,nada)
 
 
 #Inicializar variables globales: color=blanco, grosor=2 y modo de 
@@ -87,9 +89,11 @@ while True:
     ###########################################################################
     #Leemos las posiciones de los trackbars RGB y el grosor. 
     ###########################################################################
-    r=g=b= 0
+    r = cv2.getTrackbarPos('R','Paint')
+    g = cv2.getTrackbarPos('G','Paint')
+    b = cv2.getTrackbarPos('B','Paint')
     color=(b,g,r)
-    
+    grosor = cv2.getTrackbarPos('Grosor','Paint')
  
 
 cv2.destroyAllWindows()

@@ -4,7 +4,8 @@ import numpy as np
 
 
 def on_trackbar(val):
-    global img, r, g, b, s
+    global img, r, g, b, s, switch
+    s = cv2.getTrackbarPos(switch, "Imagen")
     if s == 0:
         img[:] = 0
     else:
