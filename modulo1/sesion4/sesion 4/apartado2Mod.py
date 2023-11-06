@@ -10,37 +10,34 @@ b = 150
 s = 1
 switch = "0 : OFF \n1 : ON"
 
-def on_trackbar(val):
-    global img, r, g, b, s, switch
-    s = cv2.getTrackbarPos(switch, "Imagen")
-    if s == 0:
-        img[:] = 0
-    else:
-        img[:, :, 0] = b
-        img[:, :, 1] = g
-        img[:, :, 2] = r
-    cv2.imshow("Imagen", img)
+def on_trackbar(r,g,b):
+    global img
 
+    img[:] = [b,g,r]
+    cv2.imshow("Imagen", img)
+    
+def on_trackbar_switch(val):
+    global img
+
+    img[:] = val
+
+    cv2.imshow("Imagen", img)
 
 # Crear una imagen de fondo negro y una ventana
 cv2.namedWindow("Imagen")
 
 # Creamos las barras para cada color
-cv2.createTrackbar("R", "Imagen", 50, 255, on_trackbar)
-cv2.createTrackbar("G", "Imagen", 100, 255, on_trackbar)
-cv2.createTrackbar("B", "Imagen", 150, 255, on_trackbar)
+cv2.createTrackbar("R", "Imagen", 50, 255, lambda x: on_trackbar(cv2.getTrackbarPos("R", "Imagen"),cv2.getTrackbarPos("G", "Imagen"),cv2.getTrackbarPos("B", "Imagen")))
+cv2.createTrackbar("G", "Imagen", 100, 255, lambda x: on_trackbar(cv2.getTrackbarPos("R", "Imagen"),cv2.getTrackbarPos("G", "Imagen"),cv2.getTrackbarPos("B", "Imagen")))
+cv2.createTrackbar("B", "Imagen", 150, 255, lambda x: on_trackbar(cv2.getTrackbarPos("R", "Imagen"),cv2.getTrackbarPos("G", "Imagen"),cv2.getTrackbarPos("B", "Imagen")))
 
 # Creamos un botón interruptor ON/OFF
-cv2.createTrackbar(switch, "Imagen", 1, 1, on_trackbar)
+cv2.createTrackbar(switch, "Imagen", 1, 1, lambda x: on_trackbar_switch(cv2.getTrackbarPos(switch, "Imagen")))
 
-# Leemos las posiciones iniciales de los 4 trackbars
-r = cv2.getTrackbarPos("R", "Imagen")
-g = cv2.getTrackbarPos("G", "Imagen")
-b = cv2.getTrackbarPos("B", "Imagen")
-s = cv2.getTrackbarPos(switch, "Imagen")
+
 
 # Mostramos la imagen inicial
-on_trackbar(0)
+on_trackbar_switch(0)
 
 while 1:
     k = cv2.waitKey(1) & 0xFF  # Miramos la tecla pulsada. Si es Esc nos salimos
