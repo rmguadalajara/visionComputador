@@ -2,6 +2,13 @@
 import cv2
 import numpy as np
 
+# Initialize global variables
+img = np.zeros((480, 640, 3), np.uint8)
+r = 50
+g = 100
+b = 150
+s = 1
+switch = "0 : OFF \n1 : ON"
 
 def on_trackbar(val):
     global img, r, g, b, s, switch
@@ -16,7 +23,6 @@ def on_trackbar(val):
 
 
 # Crear una imagen de fondo negro y una ventana
-img = np.zeros((480, 640, 3), np.uint8)
 cv2.namedWindow("Imagen")
 
 # Creamos las barras para cada color
@@ -25,7 +31,6 @@ cv2.createTrackbar("G", "Imagen", 100, 255, on_trackbar)
 cv2.createTrackbar("B", "Imagen", 150, 255, on_trackbar)
 
 # Creamos un botón interruptor ON/OFF
-switch = "0 : OFF \n1 : ON"
 cv2.createTrackbar(switch, "Imagen", 1, 1, on_trackbar)
 
 # Leemos las posiciones iniciales de los 4 trackbars
