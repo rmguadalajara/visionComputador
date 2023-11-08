@@ -27,10 +27,23 @@ plt.hist(img2.flatten(),256,[0,256], color = 'r')
 plt.xlim([0,256])
 plt.show()
 
-#Mostramos la dos imágenes juntas
-res = np.hstack((img,np.uint8(img2)))
+# Ecualizamos el histograma
+img3 = cv2.equalizeHist(img)
 
-cv2.imshow("Corregida",res)
+# Mostramos la imagen ecualizada
+#cv2.imshow("Ecualizada", img3)
+
+# Obtenemos y mostramos el histograma ecualizado
+histeq,bins = np.histogram(img3.flatten(),256,[0,256])
+plt.hist(img3.flatten(),256,[0,256], color = 'r')
+plt.xlim([0,256])
+plt.show()
+
+
+#Mostramos la dos imágenes juntas
+res = np.hstack((img,np.uint8(img2),img3))
+
+cv2.imshow("Corregida y Ecualizada",res)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()

@@ -14,9 +14,7 @@ if ilum is None: #Si está vacía es que no se ha leído
 	print('Imagen no encontrada\n')
 	sys.exit(0)
 
-
-mult=cv2.multiply(...,...,None,...)#Sustituya los puntos por los parámetros adecuados
-
+mult = cv2.multiply(mano, ilum, scale=1/255)
 cv2.imshow("Radiografía", mano)
 cv2.imshow("Radiografía Corregida", mult)
 

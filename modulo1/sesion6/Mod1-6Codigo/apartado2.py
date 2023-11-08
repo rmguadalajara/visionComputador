@@ -18,8 +18,9 @@ if img1 is not None and img2 is not None:
         print ("Imágenes deben ser del mismo tamaño\n")
         sys.exit(1)
     
-    alpha=0.5
+    
     #Realiza la fusión de imágenes
+    alpha = float(sys.argv[1])
     suma=cv2.addWeighted(img1,alpha,img2,1-alpha,0)
    
     cv2.imshow("Fusion", suma)
