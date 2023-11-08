@@ -1,68 +1,76 @@
-# Paso 1: Importar las librerías necesarias
 import tensorflow as tf
-from tensorflow import keras
-import cx_Oracle
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import random
+import datetime
+from tensorflow import keras
+from tensorflow.keras import layers
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import make_column_transformer, make_column_selector
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GroupShuffleSplit
+from tensorflow.keras import callbacks
+from tensorflow.keras.callbacks import EarlyStopping
 import logging
 
-# Configura el nivel de log a INFO
+# Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Registra un mensaje de log
-logging.info("Definiendo el modelo de red neuronal...")
-# Paso 2: Definir el modelo de red neuronal
-model = keras.Sequential([
-    keras.layers.Dense(512, activation='relu', input_shape=(4,)),
-    keras.layers.Dense(512, activation='relu'),
-    keras.layers.Dense(512, activation='relu'),
-    keras.layers.Dense(512, activation='relu'),
-    keras.layers.Dense(1)
+# Carga de datos
+logging.info('Loading data...')
+visits = pd.read_csv('/content/drive/MyDrive/deep_learning/data/visits/entrenamiento1.csv')
+visits_features = visits.copy()
+
+# Conversión de fechas a formato numérico
+logging.info('Converting dates to numerical format...')
+visits_features['FECHA_ENTRADA_REV'] = pd.to_datetime(visits_features['FECHA_ENTRADA_REV']).astype(int) / 10**9
+visits_features['FECHA_SALIDA_REV'] = pd.to_datetime(visits_features['FECHA_SALIDA_REV']).astype(int) / 10**9
+
+# Separación de características y objetivo
+logging.info('Separating features and target...')
+visits_objective = visits_features.pop('FECHA_SALIDA_REV')
+
+# Codificación de características categóricas
+logging.info('Encoding categorical features...')
+visits_features_transf = pd.get_dummies(visits_features, columns=['ID_ACCION'])
+
+# Normalización de características numéricas
+logging.info('Normalizing numerical features...')
+scaler = StandardScaler()
+visits_features_transf_fit = scaler.fit_transform(visits_features_transf)
+
+# Definición del modelo
+logging.info('Defining model...')
+input_shape = [170]
+model = tf.keras.Sequential([
+    layers.Dense(512, input_shape = input_shape),
+    layers.Dense(512, activation='relu'),
+    layers.Dense(512, activation='relu'),
+    layers.Dense(512, activation='relu'),
+    layers.Dense(1)
 ])
-logging.info("Compilando el modelo...")
-# Paso 3: Compilar el modelo
-model.compile(loss='mse', optimizer='adam', metrics=['mae', 'mse'])
 
-# Paso 4: Cargar los datos desde la base de datos Oracle
-# Aquí se debe reemplazar los valores de conexión a la base de datos y la query para cargar los datos
-logging.info("Accediendo a la base de datos...")
-dsn_tns = cx_Oracle.makedsn('cancosi.sir.renfe.es', '1541', service_name='opercosi')
-conn = cx_Oracle.connect(user='APLPOSIO_MATTALLER', password='mD1PLUNk', dsn=dsn_tns)
-cursor = conn.cursor()
-cursor.execute("SELECT ri.cod_matricula, cod_serie, id_accion, fecha_entrada_rev FROM r_intervencion ri  WHERE ri.fecha_entrada_rev > TO_DATE('01-01-' || TO_CHAR(SYSDATE, 'YYYY'), 'DD-MM-YYYY")
-data = cursor.fetchall()
-cursor.close()
-conn.close()
+# Compilación del modelo
+logging.info('Compiling model...')
+model.compile(optimizer='adam', loss='mae')
 
-logging.info("Preparando los datos para el entrenamiento...")
-# Preparar los datos para el entrenamiento del modelo
-data = np.array(data)
-x_train = data[:, 1:]
-y_train = data[:, 0]
+# Entrenamiento del modelo
+logging.info('Training model...')
+out = model.fit(visits_features_transf_fit, visits_objective, batch_size=256, epochs=100)
 
-# Paso 5: Entrenar el modelo
-logging.info("Entrenando el modelo...")
-model.fit(x_train, y_train, epochs=100)
-logging.info("Fin del entrenamiento.")
-# Paso 6: Validar el modelo y sus predicciones contra los datos del dataset
-# Aquí se debe reemplazar los valores de conexión a la base de datos y la query para cargar los datos de validación
-""" cursor = conn.cursor()
-cursor.execute('SELECT ri.cod_matricula, ri.cod_serie, ri.id_accion, ri.fecha_entrada_rev, ri.fecha_salida_rev FROM r_intervencion ri  WHERE ri.fecha_entrada_rev > TO_DATE('01-01-' || TO_CHAR(SYSDATE, 'YYYY'), 'DD-MM-YYYY')
-data = cursor.fetchall()
-cursor.close()
-conn.close() """
+# Análisis del SGD: Gráfica de pérdidas
+logging.info('Plotting loss graph...')
+history_df = pd.DataFrame(out.history)
+history_df.loc[5:, ['loss']].plot();
 
-# Preparar los datos de validación
-""" data = np.array(data)
-x_test = data[:, 1:]
-y_test = data[:, 0] """
+# Predicciones
+logging.info('Making predictions...')
+predictions = model.predict(visits_features_transf)
+for i in range(len(predictions)):
+        a = predictions[i][0]
+        b = visits_features_transf.iloc[i]
 
-# Evaluar el modelo
-""" loss, mae, mse = model.evaluate(x_test, y_test, verbose=2)
-print("Mean Absolute Error:", mae)
-print("Mean Squared Error:", mse) """
-
-""" 
-def predict(data):
-    # Asegúrate de que los datos estén en el formato correcto para tu modelo
-    # ...
-    return model.predict(data) """
+        difference = a - b
+        difference_in_minutes = difference.total_seconds() / 60
+        logging.info(f"Prediction: {a}, Actual: {b}, Difference: {difference_in_minutes} minutos")
