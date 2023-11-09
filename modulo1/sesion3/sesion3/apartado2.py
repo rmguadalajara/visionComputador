@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 
 #Creamos un objeto de la clase video-captura
-#cap = cv2.VideoCapture(sys.argv[1])
 cap = cv2.VideoCapture(0)
 
 #Obtenemos la tasa de fps del objeto

@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 import sys
 from matplotlib import pyplot as plt
-'''Ejemplo de normalización del histograma'''
 
 img=cv2.imread("Imagenes/Oscura.tif",cv2.IMREAD_GRAYSCALE)
 if img is None: #Si está vacía es que no se ha leído

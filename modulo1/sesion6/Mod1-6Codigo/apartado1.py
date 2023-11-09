@@ -26,8 +26,14 @@ suma2 = cv2.add(gray1, gray2)  # Suma OpenCV
 # que hace una suma saturada. Esto significa que si el resultado de la suma es mayor que 255 , el resultado se establece en 255. Por lo tanto, la suma 
 # con OpenCV puede dar resultados diferentes a la suma con numpy si los valores de los píxeles en las imágenes son grandes.
 
+# Print the values of suma1 and suma2
+print("suma1:", suma1)
+print("suma2:", suma2)
+
+
 cv2.imshow("Suma Numpy", suma1)
 cv2.imshow("Suma OpenCV", suma2)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+

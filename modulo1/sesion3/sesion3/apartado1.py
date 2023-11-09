@@ -45,7 +45,7 @@ logo = cv2.resize(logo, (size, size))
 
 # Definimos codec y declaramos video writer
 fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
-out = cv2.VideoWriter('videoRicardoMartinez2.avi',fourcc, fps, width,height)
+out = cv2.VideoWriter('videoRicardoMartinez2.avi',fourcc, fps, (int(width),int(height)), True)
 
 #Comprueba si se ha inicializado correctamente la captura (cap.isOpened()) y
 #si el frame se ha leído correctamente (ret).
@@ -62,7 +62,7 @@ while(cap.isOpened() and ret):
     cv2.putText(frame, 'Ricardo Martinez Guadalajara', org, font, fontScale, color, thickness, cv2.LINE_AA)
     
     if frame is not None:
-        #region de interes para insertar logo
+        #Región de interes para insertar logo
         roi = frame[-size-10:-10, size-10:size+90]
         #insertamos logo
         roi += logo

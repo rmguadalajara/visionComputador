@@ -17,17 +17,19 @@ def ruido(tipo_ruido,img):
     #Genera ruido 'Sal y Pimienta'
     elif tipo_ruido == "sp":
         row,col = img.shape
-        s_vs_p = 0.5
-        amount = 0.1
+        print(row,col)
+        s_vs_p = 0.01
+        amount = 0.0001
         img_noise = img.copy()
         # Sal
         num_salt = np.ceil(amount * img.size * s_vs_p)
-        coords = [np.random.randint(0, i - 1, int(num_salt)) for i in img.shape]
-        img_noise[coords] = 255
+        coordsSalt = [np.random.randint(0, i - 1, int(num_salt)) for i in img.shape]
+        img_noise[coordsSalt] = 255
         # Pimienta
         num_pepper = np.ceil(amount* img.size * (1. - s_vs_p))
-        coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in img.shape]
-        img_noise[coords] = 0
+        coordsPepper = [np.random.randint(0, i - 1, int(num_pepper)) for i in img.shape]
+
+        img_noise[coordsPepper] = 0
         return img_noise 
 
 def psnr(img1, img2):
@@ -47,15 +49,27 @@ if img is None: #Si está vacía es que no se ha leído
 	sys.exit(0)
 
 img2=img.copy()
+cv2.imshow("Original",img2)
+#Añadimos ruido sal y pimienta
+noiseType = sys.argv[1]
+img= ruido(noiseType, img)
 
-img= ruido('sp', img)
- 
+cv2.imshow(noiseType,img)
+#Aplicamos filtro de la mediana
 median = cv2.medianBlur(img,3)
 
-print("PSNR:%g" % psnr(img2,median))
+#Mostramos el PSNR
+print("PSNR median blur:%g" % psnr(img2,median))
 
-res = np.hstack((img,median))
-cv2.imshow("Corregida",res)
+# Aplicamos filtro Gaussiano
+gaussian = cv2.GaussianBlur(img, (3, 3), 0)
+
+# Mostramos el PSNR
+print("PSNR Gaussian:%g" % cv2.PSNR(img2, gaussian))
+
+#Mostramos las imágenes
+res = np.hstack((img,median,gaussian ))
+cv2.imshow("Ruido y corregido con median blur y con gaussian blur",res)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
