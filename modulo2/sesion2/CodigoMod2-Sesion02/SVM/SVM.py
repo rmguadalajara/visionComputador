@@ -26,7 +26,7 @@ svm.setTermCriteria((cv.TERM_CRITERIA_MAX_ITER, 100, 1e-6))
 #Elección del kernel
 svm.setKernel(cv.ml.SVM_LINEAR)
 #svm.setKernel( cv.ml.SVM_RBF)
-svm.setGamma(0.0001)
+svm.setGamma(0.01)
 svm.setC(100)
 
 
@@ -85,7 +85,7 @@ for i in range(sv.shape[0]):
 
 
 
-cv.imwrite('Resultado.png', image) 
+cv.imwrite('ResultadoLinealMorePoints_Gamma0.01.png', image) 
 
 elapsed_time = time.time() - start_time
 print("Tiempo consumido: ",elapsed_time)

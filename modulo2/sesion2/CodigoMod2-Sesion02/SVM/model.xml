@@ -4,7 +4,8 @@
   <format>3</format>
   <svmType>C_SVC</svmType>
   <kernel>
-    <type>LINEAR</type></kernel>
+    <type>RBF</type>
+    <gamma>1.0000000000000000e-02</gamma></kernel>
   <C>100.</C>
   <term_criteria><iterations>100</iterations></term_criteria>
   <var_count>2</var_count>
@@ -15,24 +16,46 @@
     <dt>i</dt>
     <data>
       -1 1</data></class_labels>
-  <sv_total>1</sv_total>
+  <sv_total>15</sv_total>
   <support_vectors>
     <_>
-      -4.99490313e-02 2.97655445e-02</_></support_vectors>
-  <uncompressed_sv_total>3</uncompressed_sv_total>
-  <uncompressed_support_vectors>
+      501. 150.</_>
+    <_>
+      401. 20.</_>
     <_>
       301. 20.</_>
     <_>
       255. 10.</_>
     <_>
-      401. 255.</_></uncompressed_support_vectors>
+      401. 255.</_>
+    <_>
+      450. 301.</_>
+    <_>
+      300. 200.</_>
+    <_>
+      750. 250.</_>
+    <_>
+      350. 350.</_>
+    <_>
+      400. 400.</_>
+    <_>
+      300. 100.</_>
+    <_>
+      150. 150.</_>
+    <_>
+      250. 250.</_>
+    <_>
+      350. 350.</_>
+    <_>
+      400. 400.</_></support_vectors>
   <decision_functions>
     <_>
-      <sv_count>1</sv_count>
-      <rho>-1.3439347604486107e+01</rho>
+      <sv_count>15</sv_count>
+      <rho>1.3333333333333333e-01</rho>
       <alpha>
-        1.</alpha>
+        1. 1.0000000001188514e+00 1. 1. 1. 95. 9.3500000000000000e+01
+        -1. -1. -1.0000000001188514e+00 -1. -1. -1.
+        -9.3500000000000000e+01 -94.</alpha>
       <index>
-        0</index></_></decision_functions></opencv_ml_svm>
+        3 4 5 6 7 8 9 0 1 2 10 11 12 13 14</index></_></decision_functions></opencv_ml_svm>
 </opencv_storage>

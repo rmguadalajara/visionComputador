@@ -1,5 +1,6 @@
 import cv2
 import sys
+import time
 
 #PIVC (Procesado de Imagen y Visión por Computador) 
 #Modulo 2-Practica 1 - Detector Viola & Jones
@@ -28,9 +29,9 @@ def detector(img_color):
     
     rects =  cascade.detectMultiScale(
     img_gray,
-    scaleFactor=1.1,
-    minNeighbors=5,
-    minSize=(30, 30),
+    scaleFactor=1.05,
+    minNeighbors=10,
+    minSize=(5, 5),
     flags = cv2.CASCADE_SCALE_IMAGE
     )
     
@@ -44,18 +45,20 @@ def detector(img_color):
     draw_rects(img_out, rects, (0, 255, 0))
     return img_out
     
-
-img_color=cv2.imread('lena.jpg')
+start_time = time.time()
+img_color=cv2.imread(sys.argv[1])
 if img_color is None:
     print('Imagen no encontrada\n')
     sys.exit()
 
+
 img_out = detector(img_color)
 cv2.imwrite('resultado_deteccion.jpg', img_out)
-    
+height, width = img_out.shape[:2]
+resized = cv2.resize(img_out, (int(width/2), int(height/2)), interpolation = cv2.INTER_CUBIC)
+print("--- %s seconds ---" % (time.time() - start_time))
 #Visualizar caras detectadas
 cv2.imshow('Caras detectadas',img_out)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
 
