@@ -5,8 +5,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
-            "args": [".\balls.png"]
+            "program": "${file}"
         }
     ]
 }
